@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+    </header>
+    <main>
+        <div id="manage-events">
+            <h2>Manage Events</h2>
+            <button onclick="openCreateEventForm()">Create New Event</button>
+            <ul id="event-list">
+                <!-- Existing events will be dynamically inserted here -->
+            </ul>
+        </div>
+
+        <div id="edit-event-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditEventModal()">&times;</span>
+                <h2></h2>
+                <!-- Form for editing event details will be dynamically inserted here -->
+            </div>
+        </div>
+        
+        <div id="manage-bookings">
+            <h2>Manage Bookings</h2>
+            <ul id="booking-list">
+                <!-- Bookings will be dynamically inserted here -->
+            </ul>
+        </div>
+         <!-- Booking form -->
+         <form id="booking-form" action="admin_dashboard.php" method="post">
+            <!-- Form fields -->
+            <input type="hidden" name="event-id" value="1"> <!-- Replace 1 with the actual event ID -->
+            <!-- Additional form fields -->
+            </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 Event Management Platform</p>
+    </footer>
+
+    <script>
+        // Sample data for initial events and bookings (replace with your data or fetch from server)
+        let events = [
+            { id: 1, title: "Event 1", date: "2025-05-01", location: "Venue 1", ticketsAvailable: 100 },
+            { id: 2, title: "Event 2", date: "2025-06-01", location: "Venue 2", ticketsAvailable: 50 }
+        ];
+
+        let bookings = [
+            { id: 1, eventId: 1, attendee: "John Doe", tickets: 2 },
+            { id: 2, eventId: 1, attendee: "Jane Smith", tickets: 1 },
+            { id: 3, eventId: 2, attendee: "Alice Johnson", tickets: 3 }
+        ];
+
+        // Function to display existing events
+        function displayEvents() {
+            const eventList = document.getElementById('event-list');
+            eventList.innerHTML = ''; // Clear existing list
+
+            events.forEach(event => {
+                const eventItem = document.createElement('li');
+                eventItem.innerHTML = `
+                    <span>${event.title}</span>
+                    <button onclick="editEventDetails(${event.id})">Edit</button>
+                    <button onclick="deleteEvent(${event.id})">Delete</button>
+                `;
+                eventList.appendChild(eventItem);
+            });
+        }
+
+        // Function to display existing bookings
+        function displayBookings() {
+            const bookingList = document.getElementById('booking-list');
+            bookingList.innerHTML = ''; // Clear existing list
+
+            bookings.forEach(booking => {
+                const bookingItem = document.createElement('li');
+                bookingItem.innerHTML = `
+                    <span>Event ID: ${booking.eventId}, Attendee: ${booking.attendee}, Tickets: ${booking.tickets}</span>
+                    <button onclick="cancelBooking(${booking.id})">Cancel</button>
+                    <button onclick="viewAttendeeDetails(${booking.id})">View Details</button>
+                `;
+                bookingList.appendChild(bookingItem);
+            });
+        }
+
+        // Function to open form for creating a new event
+        function openCreateEventForm() {
+            // Code to display form for creating a new event
+// Get the modal content element
+    const modalContent = document.querySelector('.modal-content');
+
+    // Clear existing content in the modal
+    modalContent.innerHTML = '';
+
+    // Create form elements for creating a new event
+    const createForm = document.createElement('form');
+    createForm.innerHTML = `
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required><br><br>
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required><br><br>
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" required><br><br>
+        <label for="ticketsAvailable">Tickets Available:</label>
+        <input type="number" id="ticketsAvailable" name="ticketsAvailable" required><br><br>
+        <button type="submit">Create Event</button>
+    `;
+
+    // Add event listener for form submission
+    createForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Retrieve new event details from the form
+        const newEvent = {
+            id: events.length + 1, // Generate a unique ID for the new event
+            title: createForm.title.value,
+            date: createForm.date.value,
+            location: createForm.location.value,
+            ticketsAvailable: parseInt(createForm.ticketsAvailable.value)
+        };
+
+        // Call createEvent function to add the new event
+        createEvent(newEvent);
+
+        // Close the modal after creating the event
+        closeEditEventModal();
+    });
+
+    // Append the form to the modal content
+    modalContent.appendChild(createForm);
+
+    // Show the modal
+    document.getElementById('edit-event-modal').style.display = 'block';
+}
+
+        
+
+        // Function to create a new event
+        function createEvent(newEvent) {
+            // Code to add the new event to the events array
+            events.push(newEvent);
+            // Display updated events
+            displayEvents();
+        }
+
+        // Function to edit event details
+        function editEventDetails(eventId) {
+            // Code to display form for editing event details
+            // ...
+// Find the event to edit by its ID
+    const eventToEdit = events.find(event => event.id === eventId);
+
+    // Get the modal content element
+    const modalContent = document.querySelector('.modal-content');
+
+    // Clear existing content in the modal
+    modalContent.innerHTML = '';
+
+    // Create form elements for editing event details
+    const editForm = document.createElement('form');
+    editForm.innerHTML = `
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="${eventToEdit.title}" required><br><br>
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" value="${eventToEdit.date}" required><br><br>
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" value="${eventToEdit.location}" required><br><br>
+        <label for="ticketsAvailable">Tickets Available:</label>
+        <input type="number" id="ticketsAvailable" name="ticketsAvailable" value="${eventToEdit.ticketsAvailable}" required><br><br>
+        <button type="submit">Update Event</button>
+    `;
+
+    // Add event listener for form submission
+    editForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Retrieve updated event details from the form
+        const updatedEvent = {
+            id: eventId,
+            title: editForm.title.value,
+            date: editForm.date.value,
+            location: editForm.location.value,
+            ticketsAvailable: parseInt(editForm.ticketsAvailable.value)
+        };
+
+        // Call updateEvent function to update event details
+        updateEvent(eventId, updatedEvent);
+
+        // Close the modal after updating event details
+        closeEditEventModal();
+    });
+
+    // Append the form to the modal content
+    modalContent.appendChild(editForm);
+
+    // Show the modal
+    document.getElementById('edit-event-modal').style.display = 'block';
+}
+
+// Function to close the edit event modal
+function closeEditEventModal() {
+    // Hide the modal
+    document.getElementById('edit-event-modal').style.display = 'none';
+}
+
+
+
+
+
+
+        
+
+        // Function to close the edit event modal
+        function closeEditEventModal() {
+            // Code to close the modal
+            // ...
+            document.getElementById('edit-event-modal').style.display = 'none';
+}
+        
+
+        // Function to update event details
+        function updateEvent(eventId, updatedEvent) {
+            // Code to update event details in the events array
+            // Find the index of the event to update
+    const eventIndex = events.findIndex(event => event.id === eventId);
+
+// If the event index is found
+if (eventIndex !== -1) {
+    // Update the event details in the events array
+    events[eventIndex] = updatedEvent;
+            // Display updated events
+
+            displayEvents();
+        }
+        else{
+            console.error('Event not found.');
+        }
+        }
+
+        // Function to delete an event
+        function deleteEvent(eventId) {
+            // Code to delete event from the events array
+            // Find the index of the event to delete
+    const eventIndex = events.findIndex(event => event.id === eventId);
+
+// If the event index is found
+if (eventIndex !== -1) {
+    // Remove the event from the events array
+    events.splice(eventIndex, 1);
+            // Display updated events
+            displayEvents();
+        }
+        else{
+console.error('event not found.');
+        }
+        }
+
+        // Function to cancel a booking
+        function cancelBooking(bookingId) {
+            // Code to cancel booking from the bookings array
+            // Find the index of the booking to cancel
+    const bookingIndex = bookings.findIndex(booking => booking.id === bookingId);
+
+// If the booking index is found
+if (bookingIndex !== -1) {
+    // Remove the booking from the bookings array
+    bookings.splice(bookingIndex, 1);
+            // Display updated bookings
+            displayBookings();
+        }
+        else{
+console.error('Booking not found.')
+        }
+        }
+
+        // Function to view attendee details
+        function viewAttendeeDetails(bookingId) {
+            // Code to display attendee details for the booking
+            // Find the booking by its ID
+    const booking = bookings.find(booking => booking.id === bookingId);
+
+// If the booking is found
+if (booking) {
+    // Display attendee details
+    alert(`Attendee: ${booking.attendee}\nTickets: ${booking.tickets}`);
+    } else {
+        console.error('Booking not found.');
+    }
+        }
+
+        // Call displayEvents and displayBookings functions to show initial events and bookings
+        displayEvents();
+        displayBookings();
+    </script>
+</body>
+</html>

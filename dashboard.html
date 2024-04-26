@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #booked-events {
+            margin-bottom: 20px;
+        }
+
+        #event-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #event-list li {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #event-list li span {
+            flex: 1;
+        }
+
+        #event-list li button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #event-list li button:hover {
+            background-color: #c82333;
+        }
+
+        #add-event-form {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+
+        #add-event-form label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #add-event-form input[type="text"],
+        #add-event-form input[type="date"],
+        #add-event-form input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #add-event-form button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #add-event-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>User Dashboard</h1>
+    </header>
+    <main>
+        <div id="booked-events">
+            <h2>Booked Events</h2>
+            <ul id="event-list">
+                <!-- Booked events will be dynamically inserted here -->
+            </ul>
+        </div>
+
+        <div id="add-event-form">
+            <h2>Add New Event</h2>
+            <form id="new-event-form"action="add_event.php"method="post">
+                <label for="title">Event Title:</label>
+                <input type="text" id="title" name="title" required>
+                <label for="date">Event Date:</label>
+                <input type="date" id="date" name="date" required>
+                <label for="location">Event Location:</label>
+                <input type="text" id="location" name="location" required>
+                <label for="tickets">Number of Tickets:</label>
+                <input type="number" id="tickets" name="tickets" min="1" required>
+                <button type="submit">Add Event</button>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Event Management Platform</p>
+    </footer>
+    <script>
+        // Sample data for booked events (replace with actual data or fetch from server)
+        let bookedEvents = [
+            { id: 1, title: "Event 1", date: "2025-05-01", location: "Venue 1", tickets: 2 },
+            { id: 2, title: "Event 2", date: "2025-06-01", location: "Venue 2", tickets: 1 }
+        ];
+
+        // Function to display booked events
+        function displayBookedEvents() {
+            const eventList = document.getElementById('event-list');
+            eventList.innerHTML = ''; // Clear existing list
+
+            bookedEvents.forEach(event => {
+                const eventItem = document.createElement('li');
+                eventItem.innerHTML = `
+                    <span>${event.title} - ${event.date} (${event.location})</span>
+                    <span>Tickets: ${event.tickets}</span>
+                    <button onclick="cancelBooking(${event.id})">Cancel Booking</button>
+                `;
+                eventList.appendChild(eventItem);
+            });
+        }
+
+        // Function to cancel a booking
+        function cancelBooking(eventId) {
+            // Find the booked event to cancel
+            const index = bookedEvents.findIndex(event => event.id === eventId);
+            if (index !== -1) {
+                // Remove the event from the bookedEvents array
+                bookedEvents.splice(index, 1);
+                // Update the displayed booked events
+                displayBookedEvents();
+            }
+        }
+
+        // Function to handle adding a new event
+        document.getElementById('new-event-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            
+            // Get form data
+            const formData = new FormData(this);
+            
+            // Generate a unique ID for the new event (replace this with your logic)
+            const eventId = bookedEvents.length + 1;
+            
+            // Extract form values
+            const title = formData.get('title');
+            const date = formData.get('date');
+            const location = formData.get('location');
+            const tickets = parseInt(formData.get('tickets'));
+            
+            // Add the new event to the bookedEvents array
+            bookedEvents.push({ id: eventId, title, date, location, tickets });
+            
+            // Display updated booked events
+            displayBookedEvents();
+            
+            // Reset form fields
+            this.reset();
+        });
+
+        // Call the function to display booked events
+        displayBookedEvents();
+    </script>
+</body>
+</html>

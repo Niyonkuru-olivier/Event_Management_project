@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Listing</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Upcoming Events</h1>
+    </header>
+    <main id="event-listing">
+        <!-- Events will be dynamically inserted here -->
+    </main>
+    <footer>
+        <p>&copy; 2024 Event Management Platform</p>
+    </footer>
+    <script>
+        // Sample data for upcoming events (replace with actual data or fetch from server)
+        let upcomingEvents = [
+            { title: "Women deliver", date: "may 17, 2024", location: "Serena Hotel, Kigali", ticketsAvailable: 100 },
+            { title: "International Education Fairs", date: "october 10, 2024", location: "Kigali Convetion Center, Kigali", ticketsAvailable: 150 },
+            { title: "Kwita-Izina Ceremony", date: "September 1, 2024", location: "Kinigi-Musanze", ticketsAvailable: 100 + "For VIP" },
+            { title: "Important of ICT and Innovation in the Agriculture development", date: "January 08, 2024-january 11,2024", location: "Ubumwe Grande Hotel, Kigali", ticketsAvailable: 150 + "for Inviters" },
+            { title: "UR Graduation Ceremony", date: "November 19, 2024", location: "Ubworoherane Stadium-MUSANZE", ticketsAvailable: "For all Graduant student and their Family" },
+            { title: "Fight Pandemic Diseases", date: "May 30, 2024-May 31, 2024", location: "Alpha Place, Bugesera", ticketsAvailable: 150 }
+        ];
+
+        // Function to display upcoming events
+        function displayUpcomingEvents() {
+            const eventListing = document.getElementById('event-listing');
+
+            upcomingEvents.forEach((event, index) => {
+                const eventDiv = document.createElement('div');
+                eventDiv.classList.add('event');
+
+                const titleElement = document.createElement('h2');
+                titleElement.textContent = event.title;
+
+                const dateElement = document.createElement('p');
+                dateElement.textContent = `Date: ${event.date}`;
+
+                const locationElement = document.createElement('p');
+                locationElement.textContent = `Location: ${event.location}`;
+
+                const ticketsElement = document.createElement('p');
+                ticketsElement.textContent = `Tickets Available: ${event.ticketsAvailable}`;
+
+                const bookingForm = document.createElement('form');
+                bookingForm.id = 'booking-form';
+                bookingForm.action = 'handle_booking.php'; // Set form action
+                bookingForm.method = 'post'; // Set form method
+                bookingForm.innerHTML = `
+                    <input type="hidden" name="event_id" value="${index + 1}">
+                    <label for="ticket-quantity">Select number of tickets:</label>
+                    <input type="number" id="ticket-quantity" name="ticket_quantity" min="1" max="${event.ticketsAvailable}">
+                    <button type="submit">Book Tickets</button>
+                `;
+
+                eventDiv.appendChild(titleElement);
+                eventDiv.appendChild(dateElement);
+                eventDiv.appendChild(locationElement);
+                eventDiv.appendChild(ticketsElement);
+                eventDiv.appendChild(bookingForm);
+
+                eventListing.appendChild(eventDiv);
+            });
+        }
+
+        // Call the function to display upcoming events
+        displayUpcomingEvents();
+    </script>
+</body>
+</html>

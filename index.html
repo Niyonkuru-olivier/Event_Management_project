@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Listing</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Upcoming Events</h1>
+        <ul class="navigation">
+            <li class="dropdown">
+                <a title="Event List" href="admin.html">Admin dashboard <i class="fa fa-angle-down"></i></a>
+                <i class="ddl-switch fa fa-angle-down"></i>
+                
+            </li>
+            
+            <li><a title="Event List" href="event.html">Event Details</a></li>
+            <li class="dropdown">
+
+                <i class="ddl-switch fa fa-angle-down"></i>
+                <ul class="dropdown-menu"></ul>
+            </li>
+            <li class="dropdown">
+                <a aria-expanded="false" aria-haspopup="true" role="button" class="dropdown-toggle" title="Pages" href="booking.html">Booking Tickets <i class="fa fa-angle-down"></i></a>
+                <i class="ddl-switch fa fa-angle-down"></i>
+                <ul class="dropdown-menu"></ul>
+            </li>
+            <li><a title="Event List" href="dashboard.html">User dashboard</a></li>
+            <li><a title="Event List" href="contact.html">Contact us</a></li>
+        </ul>
+    </header>
+
+    <main>
+        <div class="event">
+            <h2>Event Title</h2>
+            <p>Date: January 1, 2025</p>
+            <p>Location: Venue Name, City</p>
+            <p>Tickets Available: 100</p>
+            <button class="book-btn">Book Tickets</button>
+        </div>
+        <!-- More events can be added here -->
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Event Management Platform</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
